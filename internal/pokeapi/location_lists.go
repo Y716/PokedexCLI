@@ -13,6 +13,17 @@ func (c *Client) ListLocations(pageURL *string) (location_areas, error) {
 		url = *pageURL
 	}
 
+	data, gotCache := c.cache.Get(url)
+
+	if gotCache {
+		var areas location_areas
+		err := json.Unmarshal(data, &areas)
+		if err != nil {
+			return location_areas{}, fmt.Errorf("Error unmarshaling data: %w", err)
+		}
+		return areas, nil
+	}
+
 	res, err := http.Get(url)
 	if err != nil {
 		return location_areas{}, fmt.Errorf("Error accessing API: %w", err)
@@ -23,10 +34,13 @@ func (c *Client) ListLocations(pageURL *string) (location_areas, error) {
 	if err != nil {
 		return location_areas{}, fmt.Errorf("Error read data: %w", err)
 	}
+	c.cache.Add(url, body)
+
 	var areas location_areas
 	err = json.Unmarshal(body, &areas)
 	if err != nil {
 		return location_areas{}, fmt.Errorf("Error unmarshaling data: %w", err)
 	}
+
 	return areas, nil
 }

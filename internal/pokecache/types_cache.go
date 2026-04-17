@@ -1,6 +1,7 @@
 package pokecache
 
 import (
+	"fmt"
 	"sync"
 	"time"
 )
@@ -12,18 +13,20 @@ type cacheEntry struct {
 
 type Cache struct {
 	cacheEntry map[string]cacheEntry
-	mu         sync.Mutex
+	mu         *sync.Mutex
 	duration   time.Duration
 }
 
-func NewCache(interval time.Duration) *Cache {
+func NewCache(interval time.Duration) Cache {
 	newCache := make(map[string]cacheEntry)
 	cache := Cache{
 		cacheEntry: newCache,
 		duration:   interval,
+		mu:         &sync.Mutex{},
 	}
+	fmt.Println("cache map initialized:", cache.cacheEntry != nil)
 	go cache.reapLoop()
-	return &cache
+	return cache
 }
 
 func (c *Cache) Add(key string, val []byte) {
