@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"pokedexcli/internal/pokeapi"
 	"strings"
 )
 
@@ -14,8 +15,9 @@ type cliCommand struct {
 }
 
 type config struct {
-	Next     string
-	Previous string
+	pokeapiClient pokeapi.Client
+	Next          string
+	Previous      string
 }
 
 func getCommands() map[string]cliCommand {
@@ -53,16 +55,15 @@ func cleanInput(text string) []string {
 	return slice
 }
 
-func startRepl() {
+func startRepl(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
-	var url config
 	for {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 		token := cleanInput(scanner.Text())[0]
 
 		if _, ok := getCommands()[token]; ok {
-			err := getCommands()[token].callback(&url)
+			err := getCommands()[token].callback(cfg)
 			if err != nil {
 				fmt.Printf("Error found: %v\n", err)
 			}
