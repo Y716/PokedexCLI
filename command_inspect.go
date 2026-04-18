@@ -5,14 +5,6 @@ import (
 )
 
 func commandInspect(cfg *config, params ...string) error {
-	if len(params) == 1 {
-		for pokemon := range cfg.pokedex {
-			fmt.Println(pokemon)
-		}
-		fmt.Println("Type `Inspect <pokemon_name>` to inspect the pokemon")
-		return nil
-	}
-
 	pokemonName := params[1]
 	if _, ok := cfg.pokedex[pokemonName]; !ok {
 		fmt.Println("You have not catch that pokemon")
