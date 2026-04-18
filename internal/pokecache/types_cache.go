@@ -1,7 +1,6 @@
 package pokecache
 
 import (
-	"fmt"
 	"sync"
 	"time"
 )
@@ -24,7 +23,6 @@ func NewCache(interval time.Duration) Cache {
 		duration:   interval,
 		mu:         &sync.Mutex{},
 	}
-	fmt.Println("cache map initialized:", cache.cacheEntry != nil)
 	go cache.reapLoop()
 	return cache
 }
