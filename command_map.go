@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func commandMap(cfg *config) error {
+func commandMap(cfg *config, params ...string) error {
 	if cfg.Next == "" {
 		cfg.Next = "https://pokeapi.co/api/v2/location-area/"
 	}
@@ -25,7 +25,7 @@ func commandMap(cfg *config) error {
 	return nil
 }
 
-func commandMapB(cfg *config) error {
+func commandMapB(cfg *config, params ...string) error {
 	if cfg.Previous == "" {
 		fmt.Println("you're on the first page")
 		return nil

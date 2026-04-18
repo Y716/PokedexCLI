@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/http"
 )
 
 func (c *Client) ListLocations(pageURL *string) (location_areas, error) {
@@ -24,7 +23,7 @@ func (c *Client) ListLocations(pageURL *string) (location_areas, error) {
 		return areas, nil
 	}
 
-	res, err := http.Get(url)
+	res, err := c.httpClient.Get(url)
 	if err != nil {
 		return location_areas{}, fmt.Errorf("Error accessing API: %w", err)
 	}

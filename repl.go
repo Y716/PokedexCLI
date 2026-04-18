@@ -11,7 +11,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, ...string) error
 }
 
 type config struct {
@@ -42,6 +42,11 @@ func getCommands() map[string]cliCommand {
 			description: "Get the previous 20 location-areas from the pokeapi",
 			callback:    commandMapB,
 		},
+		"explore": {
+			name:        "explore <location_name>",
+			description: "Exploring the pokemon of an area in the map",
+			callback:    commandExplore,
+		},
 	}
 }
 
@@ -60,10 +65,10 @@ func startRepl(cfg *config) {
 	for {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
-		token := cleanInput(scanner.Text())[0]
+		token := cleanInput(scanner.Text())
 
-		if _, ok := getCommands()[token]; ok {
-			err := getCommands()[token].callback(cfg)
+		if _, ok := getCommands()[token[0]]; ok {
+			err := getCommands()[token[0]].callback(cfg, token...)
 			if err != nil {
 				fmt.Printf("Error found: %v\n", err)
 			}
